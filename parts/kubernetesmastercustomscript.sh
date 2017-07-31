@@ -224,30 +224,8 @@ function configNetworkPolicy() {
     fi
 }
 
-function systemctlEnableAndCheck() {
-    systemctl enable $1
-    systemctl is-enabled $1
-    enabled=$?
-    for i in {1..900}; do
-        if [ $enabled -ne 0 ]; then
-            systemctl enable $1
-            systemctl is-enabled $1
-            enabled=$?
-        else
-            break
-        fi
-        sleep 1
-    done
-    if [ $enabled -ne 0 ]
-    then
-        echo "$1 could not be enabled by systemctl"
-        exit 5
-    fi
-    systemctl enable $1
-}
-
 function ensureDocker() {
-    systemctlEnableAndCheck docker
+    systemctl enable docker
     # only start if a reboot is not required
     if ! $REBOOTREQUIRED; then
         systemctl restart docker
@@ -272,7 +250,7 @@ function ensureDocker() {
 }
 
 function ensureKubelet() {
-    systemctlEnableAndCheck kubelet
+    systemctl enable kubelet
     # only start if a reboot is not required
     if ! $REBOOTREQUIRED; then
         systemctl restart kubelet
@@ -280,7 +258,7 @@ function ensureKubelet() {
 }
 
 function extractKubectl(){
-    systemctlEnableAndCheck kubectl-extract
+    systemctl enable kubectl-extract
     # only start if a reboot is not required
     if ! $REBOOTREQUIRED; then
         systemctl restart kubectl-extract
@@ -289,7 +267,7 @@ function extractKubectl(){
 
 function ensureJournal(){
     systemctl daemon-reload
-    systemctlEnableAndCheck systemd-journald.service
+    systemctl enable systemd-journald.service
     # only start if a reboot is not required
     if ! $REBOOTREQUIRED; then
         systemctl restart systemd-journald.service

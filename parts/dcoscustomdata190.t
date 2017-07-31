@@ -118,7 +118,6 @@ runcmd:
   - --no-block
   - start
   - dcos-setup.service
-- /opt/azure/containers/add_admin_to_docker_group.sh
 write_files:
 - content: 'https://dcosio.azureedge.net/dcos/stable
 
@@ -303,10 +302,4 @@ write_files:
 - path: /var/lib/dcos/mesos-slave-common
   content: 'ATTRIBUTES_STR'
   permissions: "0644"
-  owner: "root"
-- content: |
-    #!/bin/bash
-    adduser {{{adminUsername}}} docker
-  path: "/opt/azure/containers/add_admin_to_docker_group.sh"
-  permissions: "0744"
   owner: "root"
